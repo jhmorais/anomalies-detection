@@ -7,8 +7,8 @@ import (
 )
 
 type MetricRepository interface {
-	FindMetricByName(ctx context.Context, id string) (*entities.Device, error)
-	FindMetricByValue(ctx context.Context, brand string) ([]*entities.Device, error)
-	FindMetric(ctx context.Context, brand, name string) (*entities.Device, error)
-	ListMetric(ctx context.Context) ([]*entities.Device, error)
+	FindMetricByName(ctx context.Context, id string) (*entities.Metric, error)
+	FindMetricByValue(ctx context.Context, value int) ([]*entities.Metric, error)
+	FindMetric(ctx context.Context, value int, name string) (*entities.Metric, error)
+	ListMetric(ctx context.Context) ([]*entities.Metric, error)
 }

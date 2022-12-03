@@ -19,15 +19,15 @@ func NewAverageUseCase(metricRepository repositories.MetricRepository) contracts
 	}
 }
 
-func (c *averageUseCase) Execute(ctx context.Context, metric []*input.Metric) (average int, valuesMaps map[int]int) {
+func (c *averageUseCase) Execute(ctx context.Context, metrics []*input.Metric) (average int, valuesMaps map[int]int) {
 	valuesMaps = make(map[int]int)
 	total := 0
-	for _, value := range metric {
-		valuesMaps[value] = value
-		total += value
+	for _, metric := range metrics {
+		valuesMaps[metric.Value] = metric.Value
+		total += metric.Value
 	}
 
-	average = total / len(metric)
+	average = total / len(metrics)
 
 	return average, valuesMaps
 }

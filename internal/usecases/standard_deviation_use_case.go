@@ -12,7 +12,7 @@ type standardDeviationUseCase struct {
 	metricRepository repositories.MetricRepository
 }
 
-func NewStandardDeviationUseCase(metricRepository repositories.MetricRepository) contracts.DeviationUseCase {
+func NewStandardDeviationUseCase(metricRepository repositories.MetricRepository) contracts.StandardDeviationUseCase {
 
 	return &standardDeviationUseCase{
 		metricRepository: metricRepository,

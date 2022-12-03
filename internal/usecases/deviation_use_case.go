@@ -23,8 +23,8 @@ func NewDeviationUseCase(metricRepository repositories.MetricRepository) contrac
 func (c *deviationUseCase) Execute(ctx context.Context, average int, metrics []*input.Metric) []int {
 	deviationList := make([]int, len(metrics))
 
-	for _, value := range metrics {
-		deviation := int(math.Abs((average - value)))
+	for _, metric := range metrics {
+		deviation := int(math.Abs(float64(average - metric.Value)))
 		deviationList = append(deviationList, deviation)
 	}
 
