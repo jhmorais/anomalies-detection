@@ -7,6 +7,6 @@ import (
 	"github.com/jhmorais/anomalies-detection/internal/usecases/ports/output"
 )
 
-type AnomaliesUseCase interface {
-	Execute(ctx context.Context, result *output.AnomaliesOutput, parameters *input.ParametersAnomaliesInput) (*output.AnomaliesOutput, error)
+type CreateMetricListUseCase interface {
+	Execute(ctx context.Context, dataset *input.DatasetInput) (output.AnomaliesOutput, error)
 }

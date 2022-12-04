@@ -5,7 +5,6 @@ import (
 
 	"github.com/jhmorais/anomalies-detection/internal/repositories"
 	"github.com/jhmorais/anomalies-detection/internal/usecases/contracts"
-	"github.com/jhmorais/anomalies-detection/internal/usecases/ports/input"
 )
 
 type averageUseCase struct {
@@ -19,15 +18,18 @@ func NewAverageUseCase(metricRepository repositories.MetricRepository) contracts
 	}
 }
 
-func (c *averageUseCase) Execute(ctx context.Context, metrics []*input.Metric) (average int, valuesMaps map[int]int) {
-	valuesMaps = make(map[int]int)
-	total := 0
+func (c *averageUseCase) Execute(ctx context.Context) (average float64, err error) {
+	total := float64(0)
+	metrics, err := c.metricRepository.ListMetric(ctx)
+	if err != nil {
+		return average, err
+	}
+
 	for _, metric := range metrics {
-		valuesMaps[metric.Value] = metric.Value
 		total += metric.Value
 	}
 
-	average = total / len(metrics)
+	average = total / float64(len(metrics))
 
-	return average, valuesMaps
+	return average, err
 }

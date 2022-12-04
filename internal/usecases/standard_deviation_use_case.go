@@ -19,8 +19,8 @@ func NewStandardDeviationUseCase(metricRepository repositories.MetricRepository)
 	}
 }
 
-func (c *standardDeviationUseCase) Execute(ctx context.Context, variance int) int {
-	standardDeviation := int(math.Sqrt(float64(variance)))
+func (c *standardDeviationUseCase) Execute(ctx context.Context, variance int) float64 {
+	standardDeviation := math.Sqrt(float64(variance))
 
 	return standardDeviation
 }

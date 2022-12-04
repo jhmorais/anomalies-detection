@@ -6,7 +6,6 @@ import (
 
 	"github.com/jhmorais/anomalies-detection/internal/repositories"
 	"github.com/jhmorais/anomalies-detection/internal/usecases/contracts"
-	"github.com/jhmorais/anomalies-detection/internal/usecases/ports/input"
 )
 
 type deviationUseCase struct {
@@ -20,13 +19,17 @@ func NewDeviationUseCase(metricRepository repositories.MetricRepository) contrac
 	}
 }
 
-func (c *deviationUseCase) Execute(ctx context.Context, average int, metrics []*input.Metric) []int {
+func (c *deviationUseCase) Execute(ctx context.Context, average float64) ([]int, error) {
+	metrics, err := c.metricRepository.ListMetric(ctx)
+	if err != nil {
+		return nil, err
+	}
 	deviationList := make([]int, len(metrics))
 
 	for _, metric := range metrics {
-		deviation := int(math.Abs(float64(average - metric.Value)))
+		deviation := int(math.Abs(average - metric.Value))
 		deviationList = append(deviationList, deviation)
 	}
 
-	return deviationList
+	return deviationList, nil
 }

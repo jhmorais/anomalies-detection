@@ -14,12 +14,17 @@ func main() {
 
 	dependencies := di.NewBuild()
 
-	router := services.NewHTTPRouter(dependencies.Usecases.AnomaliesUseCase)
+	router := services.NewHTTPRouter(dependencies.Usecases.AnomaliesUseCase,
+		dependencies.Usecases.CreateMetricListUseCase,
+		dependencies.Usecases.AverageUseCase,
+		dependencies.Usecases.DeviationUseCase,
+		dependencies.Usecases.StandardDeviationUseCase,
+		dependencies.Usecases.VarianceUseCase)
 
 	fmt.Println("Starting SERVER, LISTEN PORT: " + config.GetServerPort())
-	deviceErr := http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), router)
-	if deviceErr != nil && deviceErr != http.ErrServerClosed {
+	anomaliesErr := http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), router)
+	if anomaliesErr != nil && anomaliesErr != http.ErrServerClosed {
 		fmt.Println("failed to create server rest on port: " + config.GetServerPort())
-		fmt.Println(deviceErr.Error())
+		fmt.Println(anomaliesErr.Error())
 	}
 }

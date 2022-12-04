@@ -10,23 +10,31 @@ import (
 )
 
 type metricRepository struct {
-	db []entities.Metric
+	db []*entities.Metric
 }
 
-func NewMetricRepository(db []entities.Metric) MetricRepository {
+func NewMetricRepository(db []*entities.Metric) MetricRepository {
 	return &metricRepository{db: db}
 }
 
-func (d *metricRepository) AddMetric(ctx context.Context, metrics []input.Metric) error {
+func (d *metricRepository) AddMetric(ctx context.Context, metrics []*input.Metric, attributeParent *string) error {
 	var err error
 
 	for _, metric := range metrics {
+		attribute := metric.Attribute
+		if attributeParent != nil {
+			attribute = fmt.Sprintf("%s > %s", *attributeParent, metric.Attribute)
+		}
 		newMetric := entities.Metric{
 			Name:      metric.Name,
+			Attribute: attribute,
 			Value:     metric.Value,
-			Attribute: metric.Attribute,
 		}
-		d.db = append(d.db, newMetric)
+		d.db = append(d.db, &newMetric)
+
+		if metric.Child != nil {
+			d.AddMetric(ctx, metric.Child, &attribute)
+		}
 	}
 
 	if len(d.db) == 0 {
@@ -41,7 +49,7 @@ func (d *metricRepository) FindMetricByName(ctx context.Context, name string) (*
 
 	for _, val := range d.db {
 		if val.Name == name {
-			entity = &val
+			entity = val
 		}
 	}
 	if entity == nil {
@@ -51,29 +59,29 @@ func (d *metricRepository) FindMetricByName(ctx context.Context, name string) (*
 	return entity, err
 }
 
-func (d *metricRepository) FindMetricByValue(ctx context.Context, value int) ([]*entities.Metric, error) {
+func (d *metricRepository) FindMetricByValue(ctx context.Context, value float64) ([]*entities.Metric, error) {
 	var entities []*entities.Metric
 	var err error
 
 	for _, val := range d.db {
 		if val.Value == value {
-			entities = append(entities, &val)
+			entities = append(entities, val)
 		}
 	}
 	if entities == nil {
-		err = fmt.Errorf("failed, metrics with value: '%d' not found", value)
+		err = fmt.Errorf("failed, metrics with value: '%f' not found", value)
 	}
 
 	return entities, err
 }
 
-func (d *metricRepository) FindMetric(ctx context.Context, value int, name string) (*entities.Metric, error) {
+func (d *metricRepository) FindMetric(ctx context.Context, value float64, name string) (*entities.Metric, error) {
 	var entity *entities.Metric
 	var err error
 
 	for _, val := range d.db {
 		if val.Name == name && val.Value == value {
-			entity = &val
+			entity = val
 		}
 	}
 	if entity == nil {
@@ -84,15 +92,8 @@ func (d *metricRepository) FindMetric(ctx context.Context, value int, name strin
 }
 
 func (d *metricRepository) ListMetric(ctx context.Context) ([]*entities.Metric, error) {
-	var entities []*entities.Metric
-	var err error
-
-	for _, val := range d.db {
-		entities = append(entities, &val)
+	if len(d.db) == 0 {
+		return nil, errors.New("failed, metric list is empty")
 	}
-	if entities == nil {
-		err = fmt.Errorf("failed don't exist any metric")
-	}
-
-	return entities, err
+	return d.db, nil
 }

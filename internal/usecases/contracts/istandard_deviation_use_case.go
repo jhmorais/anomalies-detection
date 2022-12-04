@@ -5,5 +5,5 @@ import (
 )
 
 type StandardDeviationUseCase interface {
-	Execute(ctx context.Context, variance int) int
+	Execute(ctx context.Context, variance int) float64
 }

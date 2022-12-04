@@ -8,7 +8,7 @@ import (
 )
 
 type DenpencyBuild struct {
-	DB           []entities.Metric
+	DB           []*entities.Metric
 	Repositories Repositories
 	Usecases     Usecases
 }
@@ -18,6 +18,7 @@ type Repositories struct {
 }
 
 type Usecases struct {
+	CreateMetricListUseCase  contracts.CreateMetricListUseCase
 	AnomaliesUseCase         contracts.AnomaliesUseCase
 	AverageUseCase           contracts.AverageUseCase
 	DeviationUseCase         contracts.DeviationUseCase
@@ -37,7 +38,7 @@ func NewBuild() *DenpencyBuild {
 }
 
 func (d *DenpencyBuild) buildDB() *DenpencyBuild {
-	metricList := make([]entities.Metric, 0)
+	metricList := make([]*entities.Metric, 0)
 	d.DB = metricList
 	return d
 }
@@ -48,6 +49,7 @@ func (d *DenpencyBuild) buildRepositories() *DenpencyBuild {
 }
 
 func (d *DenpencyBuild) buildUseCases() *DenpencyBuild {
+	d.Usecases.CreateMetricListUseCase = usecases.NewCreateMetricListUseCase(d.Repositories.MetricRepository)
 	d.Usecases.AnomaliesUseCase = usecases.NewAnomaliesUseCase(d.Repositories.MetricRepository)
 	d.Usecases.AverageUseCase = usecases.NewAverageUseCase(d.Repositories.MetricRepository)
 	d.Usecases.DeviationUseCase = usecases.NewDeviationUseCase(d.Repositories.MetricRepository)

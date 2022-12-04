@@ -4,11 +4,13 @@ import (
 	"context"
 
 	"github.com/jhmorais/anomalies-detection/internal/domain/entities"
+	"github.com/jhmorais/anomalies-detection/internal/usecases/ports/input"
 )
 
 type MetricRepository interface {
+	AddMetric(ctx context.Context, metric []*input.Metric, attributeParent *string) error
 	FindMetricByName(ctx context.Context, id string) (*entities.Metric, error)
-	FindMetricByValue(ctx context.Context, value int) ([]*entities.Metric, error)
-	FindMetric(ctx context.Context, value int, name string) (*entities.Metric, error)
+	FindMetricByValue(ctx context.Context, value float64) ([]*entities.Metric, error)
+	FindMetric(ctx context.Context, value float64, name string) (*entities.Metric, error)
 	ListMetric(ctx context.Context) ([]*entities.Metric, error)
 }

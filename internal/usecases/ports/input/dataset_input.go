@@ -5,5 +5,6 @@ type DatasetInput struct {
 	TimeAgo                 string `json:"timeAgo"`
 	TimeStep                string `json:"timeStep"`
 	OutliersDetectionMethod string `json:"outliersDetectionMethod"`
-	MetricesList            []Metric
+	OutliersDetection       *OutliersDetectionInput
+	MetricesList            []*Metric
 }
