@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/jhmorais/anomalies-detection/internal/usecases/contracts"
@@ -63,6 +64,8 @@ func (h *Handler) CreateAnomalies(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// fmt.Println(string(body))
+	fmt.Println(datasetInput)
 	response, err := h.CreateMetricListUseCase.Execute(ctx, &datasetInput)
 	if err != nil {
 		utils.WriteErrModel(w, http.StatusNotFound,
@@ -105,6 +108,8 @@ func (h *Handler) CreateAnomalies(w http.ResponseWriter, r *http.Request) {
 			utils.NewErrorResponse(fmt.Sprintf("failed to create metric list, error: '%s'", err.Error())))
 		return
 	}
+
+	result.DateEnd = time.Now()
 
 	jsonResponse, err := json.Marshal(result)
 	if err != nil {

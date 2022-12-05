@@ -29,6 +29,7 @@ func (d *metricRepository) AddMetric(ctx context.Context, metrics []*input.Metri
 			Name:      metric.Name,
 			Attribute: attribute,
 			Value:     metric.Value,
+			Date:      metric.Date,
 		}
 		d.db = append(d.db, &newMetric)
 

@@ -30,7 +30,13 @@ http://localhost:8080/anomalies
  ```
 
   ## Example
+Request:
 
+![alt text](request-post.PNG)
+
+Response:
+
+![alt text](response-post.PNG)
 
   ## ☕ Testing
 

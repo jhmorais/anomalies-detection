@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"context"
-	"time"
 
 	"github.com/jhmorais/anomalies-detection/internal/repositories"
 	"github.com/jhmorais/anomalies-detection/internal/usecases/contracts"
@@ -33,16 +32,16 @@ func (c *anomaliesUseCase) Execute(ctx context.Context, result *output.Anomalies
 	for _, metric := range metrics {
 		if metric.Value >= warningValue && metric.Value < alarmValue {
 			outputWarning := output.WarningOutput{
-				OutlierPeriodStart: time.Now(),
-				OutlierPeriodEnd:   time.Now(),
+				OutlierPeriodStart: metric.Date,
+				OutlierPeriodEnd:   metric.Date.AddDate(0, 0, 1),
 				Metric:             metric.Name,
 				Attribute:          metric.Attribute,
 			}
 			result.Result.Warnings = append(result.Result.Warnings, outputWarning)
 		} else if metric.Value >= alarmValue {
 			outputAlarm := output.AlarmOutput{
-				OutlierPeriodStart: time.Now(),
-				OutlierPeriodEnd:   time.Now(),
+				OutlierPeriodStart: metric.Date,
+				OutlierPeriodEnd:   metric.Date.AddDate(0, 0, 1),
 				Metric:             metric.Name,
 				Attribute:          metric.Attribute,
 			}
