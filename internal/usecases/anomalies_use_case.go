@@ -28,7 +28,7 @@ func (c *anomaliesUseCase) Execute(ctx context.Context, result *output.Anomalies
 	}
 
 	warningValue := parameters.OutliersDetectionInput.OutliersMultiplier * parameters.StandardDeviation
-	alarmValue := parameters.OutliersDetectionInput.OutliersMultiplier * parameters.StandardDeviation
+	alarmValue := parameters.OutliersDetectionInput.StrongOutliersMultiplier * parameters.StandardDeviation
 
 	for _, metric := range metrics {
 		if metric.Value >= warningValue && metric.Value < alarmValue {
@@ -49,6 +49,8 @@ func (c *anomaliesUseCase) Execute(ctx context.Context, result *output.Anomalies
 			result.Result.Alarms = append(result.Result.Alarms, outputAlarm)
 		}
 	}
+
+	c.metricRepository.CleanMetricList()
 
 	return result, nil
 }

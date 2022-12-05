@@ -24,7 +24,7 @@ func (c *deviationUseCase) Execute(ctx context.Context, average float64) ([]int,
 	if err != nil {
 		return nil, err
 	}
-	deviationList := make([]int, len(metrics))
+	deviationList := make([]int, 0)
 
 	for _, metric := range metrics {
 		deviation := int(math.Abs(average - metric.Value))

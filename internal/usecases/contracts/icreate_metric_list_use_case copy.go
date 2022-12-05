@@ -8,5 +8,5 @@ import (
 )
 
 type CreateMetricListUseCase interface {
-	Execute(ctx context.Context, dataset *input.DatasetInput) (output.AnomaliesOutput, error)
+	Execute(ctx context.Context, dataset *input.DatasetInput) (*output.AnomaliesOutput, error)
 }

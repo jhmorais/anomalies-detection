@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"context"
+	"errors"
 	"math"
 
 	"github.com/jhmorais/anomalies-detection/internal/repositories"
@@ -19,7 +20,10 @@ func NewVarianceUseCase(metricRepository repositories.MetricRepository) contract
 	}
 }
 
-func (c *varianceUseCase) Execute(ctx context.Context, deviation []int) int {
+func (c *varianceUseCase) Execute(ctx context.Context, deviation []int) (int, error) {
+	if deviation == nil || len(deviation) < 1 {
+		return 0, errors.New("failed, deviation list is empty")
+	}
 	var variance int
 	for _, val := range deviation {
 		variance += int(math.Pow(float64(val), 2))
@@ -27,5 +31,5 @@ func (c *varianceUseCase) Execute(ctx context.Context, deviation []int) int {
 
 	variance = int(variance / len(deviation))
 
-	return variance
+	return variance, nil
 }

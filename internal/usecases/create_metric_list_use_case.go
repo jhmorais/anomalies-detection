@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/jhmorais/anomalies-detection/internal/repositories"
@@ -21,7 +22,10 @@ func NewCreateMetricListUseCase(metricRepository repositories.MetricRepository) 
 	}
 }
 
-func (c *createMetricListUseCase) Execute(ctx context.Context, dataset *input.DatasetInput) (output.AnomaliesOutput, error) {
+func (c *createMetricListUseCase) Execute(ctx context.Context, dataset *input.DatasetInput) (*output.AnomaliesOutput, error) {
+	if dataset == nil {
+		return nil, errors.New("failed, dataset is empty")
+	}
 	result := output.AnomaliesOutput{
 		SiteId:                  dataset.SiteID,
 		OutliersDetectionMethod: dataset.OutliersDetectionMethod,
@@ -31,7 +35,7 @@ func (c *createMetricListUseCase) Execute(ctx context.Context, dataset *input.Da
 		Result:                  output.Result{},
 	}
 
-	err := c.metricRepository.AddMetric(ctx, dataset.MetricesList, nil)
+	err := c.metricRepository.AddMetric(ctx, dataset.MetricsList, nil)
 
-	return result, err
+	return &result, err
 }

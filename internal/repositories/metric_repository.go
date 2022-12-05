@@ -43,6 +43,10 @@ func (d *metricRepository) AddMetric(ctx context.Context, metrics []*input.Metri
 	return err
 }
 
+func (d *metricRepository) CleanMetricList() {
+	d.db = nil
+}
+
 func (d *metricRepository) FindMetricByName(ctx context.Context, name string) (*entities.Metric, error) {
 	var entity *entities.Metric
 	var err error

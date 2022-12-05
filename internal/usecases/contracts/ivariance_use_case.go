@@ -5,5 +5,5 @@ import (
 )
 
 type VarianceUseCase interface {
-	Execute(ctx context.Context, deviation []int) int
+	Execute(ctx context.Context, deviation []int) (int, error)
 }

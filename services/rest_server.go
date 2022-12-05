@@ -84,7 +84,12 @@ func (h *Handler) CreateAnomalies(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	variance := h.VarianceUseCase.Execute(ctx, deviation)
+	variance, err := h.VarianceUseCase.Execute(ctx, deviation)
+	if err != nil {
+		utils.WriteErrModel(w, http.StatusNotFound,
+			utils.NewErrorResponse(fmt.Sprintf("failed to calculate variance, error: '%s'", err.Error())))
+		return
+	}
 	standardDeviation := h.StandardDeviationUseCase.Execute(ctx, variance)
 	parametersAnomalies := input.ParametersAnomaliesInput{
 		StandardDeviation: standardDeviation,
@@ -94,7 +99,7 @@ func (h *Handler) CreateAnomalies(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	result, err := h.AnomaliesUseCase.Execute(ctx, &response, &parametersAnomalies)
+	result, err := h.AnomaliesUseCase.Execute(ctx, response, &parametersAnomalies)
 	if err != nil {
 		utils.WriteErrModel(w, http.StatusNotFound,
 			utils.NewErrorResponse(fmt.Sprintf("failed to create metric list, error: '%s'", err.Error())))

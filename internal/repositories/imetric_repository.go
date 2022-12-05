@@ -9,6 +9,7 @@ import (
 
 type MetricRepository interface {
 	AddMetric(ctx context.Context, metric []*input.Metric, attributeParent *string) error
+	CleanMetricList()
 	FindMetricByName(ctx context.Context, id string) (*entities.Metric, error)
 	FindMetricByValue(ctx context.Context, value float64) ([]*entities.Metric, error)
 	FindMetric(ctx context.Context, value float64, name string) (*entities.Metric, error)
